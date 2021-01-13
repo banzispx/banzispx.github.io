@@ -41,6 +41,7 @@ module.exports = {
       '/': [
         '',        /* / */
         'git', /* /git.html */
+        'webpack'
       ]
     }
   }
@@ -96,10 +97,11 @@ function getframe(params) {
       ]
     },
     {
-      title: 'vue',
+      title: 'react',
       collapsable: false,
       sidebarDepth: 3,
       children: [
+        { title: 'react基础', path: '/react/base' },
         { title: 'react-hook', path: '/react/hook' },
         { title: 'Immutable', path: '/react/Immutable' },
       ]

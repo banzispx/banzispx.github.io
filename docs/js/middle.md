@@ -383,6 +383,26 @@ function objectFactory(){
     return typeof ret === "object" ? ret : obj;
 }
 ```
+new 的优先级 看如下代码
+  ```
+      function Foo() {
+          return this;
+      }
+      Foo.getName = function () {
+          console.log('1');
+      };
+      Foo.prototype.getName = function () {
+          console.log('2');
+      };
+
+      new Foo.getName();   // -> 1
+      new Foo().getName(); // -> 2
+  ```
+new Foo() 的优先级大于 new Foo ，所以对于上述代码来说可以这样划分执行顺序
+
+new (Foo.getName()); (new Foo()).getName();
+
+  对于第一个函数来说，先执行了 Foo.getName() ，所以结果为 1；对于后者来说，先执行 new Foo() 产生了一个实例，然后通过原型链找到了 Foo 上的 getName 函数，所以结果为 2
 ## `Iterator`是什么，有什么作用？
 
   JavaScript 原有的表示“集合”的数据结构，主要是数组（`Array`）和对象（`Object`），ES6 又添加了`Map`和`Set`。这样就有了四种数据集合，用户还可以组合使用它们，定义自己的数据结构，比如数组的成员是`Map`，`Map`的成员是对象。这样就需要一种统一的接口机制，来处理所有不同的数据结构。 
