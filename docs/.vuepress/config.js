@@ -41,7 +41,8 @@ module.exports = {
       '/': [
         '',        /* / */
         'git', /* /git.html */
-        'webpack'
+        'webpack',
+        'mianshi'
       ]
     }
   }
