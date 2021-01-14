@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>EventLoop | SPX Interview</title>
+    <meta name="generator" content="VuePress 1.5.2">
+    
+    <meta name="description" content="Just playing around">
+    <link rel="preload" href="/assets/css/0.styles.3f949b7f.css" as="style"><link rel="preload" href="/assets/js/app.a611df23.js" as="script"><link rel="preload" href="/assets/js/2.1379642d.js" as="script"><link rel="preload" href="/assets/js/20.6242501c.js" as="script"><link rel="prefetch" href="/assets/js/10.beeb90b4.js"><link rel="prefetch" href="/assets/js/11.e3a6abb8.js"><link rel="prefetch" href="/assets/js/12.0eec26a8.js"><link rel="prefetch" href="/assets/js/13.03b3daac.js"><link rel="prefetch" href="/assets/js/14.d2676b0f.js"><link rel="prefetch" href="/assets/js/15.95f91391.js"><link rel="prefetch" href="/assets/js/16.6c8ef939.js"><link rel="prefetch" href="/assets/js/17.cd84e178.js"><link rel="prefetch" href="/assets/js/18.8414afbf.js"><link rel="prefetch" href="/assets/js/19.0f8d6009.js"><link rel="prefetch" href="/assets/js/21.1c10ab44.js"><link rel="prefetch" href="/assets/js/22.86227233.js"><link rel="prefetch" href="/assets/js/23.d45bb3c2.js"><link rel="prefetch" href="/assets/js/24.d15fc351.js"><link rel="prefetch" href="/assets/js/25.444dea07.js"><link rel="prefetch" href="/assets/js/26.90a762cd.js"><link rel="prefetch" href="/assets/js/27.2bec70a5.js"><link rel="prefetch" href="/assets/js/28.5f7e4e30.js"><link rel="prefetch" href="/assets/js/29.31679bc1.js"><link rel="prefetch" href="/assets/js/3.1de297b1.js"><link rel="prefetch" href="/assets/js/30.1a59e853.js"><link rel="prefetch" href="/assets/js/31.73e3f38b.js"><link rel="prefetch" href="/assets/js/4.ae2b9088.js"><link rel="prefetch" href="/assets/js/5.bcea38fb.js"><link rel="prefetch" href="/assets/js/6.82007b79.js"><link rel="prefetch" href="/assets/js/7.49cb7827.js"><link rel="prefetch" href="/assets/js/8.5c3efea6.js"><link rel="prefetch" href="/assets/js/9.0c1ca9b3.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.3f949b7f.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">SPX Interview</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/http/" class="nav-link">
+  Interview
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Language Menu" class="dropdown-title"><span class="title">Frame</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/vue/" class="nav-link">
+  vue
+</a></li><li class="dropdown-item"><!----> <a href="/react/" class="nav-link">
+  react
+</a></li></ul></div></div><div class="nav-item"><a href="https://github.com/banzispx/vuePress" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/http/" class="nav-link">
+  Interview
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Language Menu" class="dropdown-title"><span class="title">Frame</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/vue/" class="nav-link">
+  vue
+</a></li><li class="dropdown-item"><!----> <a href="/react/" class="nav-link">
+  react
+</a></li></ul></div></div><div class="nav-item"><a href="https://github.com/banzispx/vuePress" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Github
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>HTTP</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/http/" class="sidebar-link">基础</a></li><li><a href="/http/url.html" class="sidebar-link">从url到页面渲染</a></li><li><a href="/http/https.html" class="sidebar-link">https</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>HTML/CSS</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/html-css/html.html" class="sidebar-link">html</a></li><li><a href="/html-css/maincss.html" class="sidebar-link">css</a></li><li><a href="/html-css/cssCode.html" class="sidebar-link">css代码</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>JS</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/js/base.html" class="sidebar-link">基础</a></li><li><a href="/js/rumen.html" class="sidebar-link">入门</a></li><li><a href="/js/middle.html" aria-current="page" class="active sidebar-link">源码</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/js/middle.html#eventloop" class="sidebar-link">EventLoop</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/js/middle.html#微任务宏任务注意点" class="sidebar-link">微任务宏任务注意点</a></li></ul></li><li class="sidebar-sub-header"><a href="/js/middle.html#闭包" class="sidebar-link">闭包</a></li><li class="sidebar-sub-header"><a href="/js/middle.html#什么是proxy？" class="sidebar-link">什么是Proxy？</a></li><li class="sidebar-sub-header"><a href="/js/middle.html#proxy实现双向代理" class="sidebar-link">proxy实现双向代理</a></li><li class="sidebar-sub-header"><a href="/js/middle.html#写一个通用的事件侦听器函数" class="sidebar-link">写一个通用的事件侦听器函数</a></li><li class="sidebar-sub-header"><a href="/js/middle.html#js的深浅拷贝" class="sidebar-link">js的深浅拷贝</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/js/middle.html#浅拷贝" class="sidebar-link">浅拷贝</a></li><li class="sidebar-sub-header"><a href="/js/middle.html#深拷贝" class="sidebar-link">深拷贝</a></li></ul></li><li class="sidebar-sub-header"><a href="/js/middle.html#手写call、apply及bind函数" class="sidebar-link">手写call、apply及bind函数</a></li><li class="sidebar-sub-header"><a href="/js/middle.html#函数柯里化的实现" class="sidebar-link">函数柯里化的实现</a></li><li class="sidebar-sub-header"><a href="/js/middle.html#new操作符的实现" class="sidebar-link">new操作符的实现</a></li><li class="sidebar-sub-header"><a href="/js/middle.html#iterator是什么，有什么作用？" class="sidebar-link">Iterator是什么，有什么作用？</a></li><li class="sidebar-sub-header"><a href="/js/middle.html#generator函数是什么，有什么作用？" class="sidebar-link">Generator函数是什么，有什么作用？</a></li><li class="sidebar-sub-header"><a href="/js/middle.html#instanceof的原理是什么" class="sidebar-link">instanceof的原理是什么</a></li><li class="sidebar-sub-header"><a href="/js/middle.html#js-的节流与防抖" class="sidebar-link">js 的节流与防抖</a></li></ul></li><li><a href="/js/axios.html" class="sidebar-link">axios</a></li><li><a href="/js/deepclone.html" class="sidebar-link">deepclone</a></li><li><a href="/js/promise.html" class="sidebar-link">promise</a></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h2 id="eventloop"><a href="#eventloop" class="header-anchor">#</a> EventLoop</h2> <p><a href="https://juejin.im/post/6844904050543034376" target="_blank" rel="noopener noreferrer">js运行机制<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a> <img src="https://user-gold-cdn.xitu.io/2020/1/18/16fb7ae3b678f1ea?imageView2/0/w/1280/h/960/ignore-error/1" alt="img"> <a href="https://juejin.cn/post/6903338967656366094" target="_blank" rel="noopener noreferrer">十分钟弄懂EventLoop事件循环<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a>
+首先，整体的script(作为第一个宏任务)开始执行的时候，会把所有代码分为<code>同步任务</code>、<code>异步任务</code>两部分
+同步任务会直接进入主线程依次执行
+异步任务会再分为宏任务和微任务
+宏任务进入到Event Table中，并在里面注册回调函数，每当指定的事件完成时，Event Table会将这个函数移到Event Queue中
+微任务也会进入到另一个Event Table中，并在里面注册回调函数，每当指定的事件完成时，Event Table会将这个函数移到Event Queue中
+当主线程内的任务执行完毕，主线程为空时，会检查微任务的Event Queue，如果有任务，就全部执行，如果没有就执行下一个宏任务
+上述过程会不断重复，这就是Event Loop，比较完整的事件循环</p> <p>常见的宏任务
+task任务源非常宽泛，比如ajax的onload，click事件，基本上我们经常绑定的各种事件都是task任务源，还有数据库操作（IndexedDB ），需要注意的是setTimeout、setInterval、setImmediate也是task任务源。总结来说task任务源：</p> <ul><li>主代码块</li> <li>setTimeout</li> <li>setInterval</li> <li>setImmediate ()-Node</li> <li>requestAnimationFrame ()-浏览器</li></ul> <p>常见微任务</p> <ul><li><p>process.nextTick ()-Node</p></li> <li><p>Promise.then()</p></li> <li><p>catch</p></li> <li><p>finally</p></li> <li><p>Object.observe 方法用于异步地监视一个对象的修改 (已经被废除， 推荐使用proxy)</p></li> <li><p><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/MutationObserver" target="_blank" rel="noopener noreferrer">MutationObserver<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a> 监听DOM变化</p> <h3 id="微任务宏任务注意点"><a href="#微任务宏任务注意点" class="header-anchor">#</a> 微任务宏任务注意点</h3></li> <li><p>浏览器会先执行一个宏任务，紧接着执行当前执行栈产生的微任务，再进行渲染，然后再执行下一个宏任务</p></li> <li><p>微任务和宏任务不在一个任务队列，不在一个任务队列</p> <ul><li>例如<code>setTimeout</code>是一个宏任务，它的事件回调在宏任务队列，<code>Promise.then()</code>是一个微任务，它的事件回调在微任务队列，二者并不是一个任务队列</li> <li>以Chrome 为例，有关渲染的都是在渲染进程中执行，渲染进程中的任务（DOM树构建，js解析…等等）需要主线程执行的任务都会在主线程中执行，而浏览器维护了一套事件循环机制，主线程上的任务都会放到消息队列中执行，主线程会循环消息队列，并从头部取出任务进行执行，如果执行过程中产生其他任务需要主线程执行的，渲染进程中的其他线程会把该任务塞入到消息队列的尾部，消息队列中的任务都是宏任务</li> <li>微任务是如何产生的呢？当执行到script脚本的时候，js引擎会为全局创建一个执行上下文，在该执行上下文中维护了一个微任务队列，当遇到微任务，就会把微任务回调放在微队列中，当所有的js代码执行完毕，在退出全局上下文之前引擎会去检查该队列，有回调就执行，没有就退出执行上下文，这也就是为什么微任务要早于宏任务，也是大家常说的，每个宏任务都有一个微任务队列（由于定时器是浏览器的API，所以定时器是宏任务，在js中遇到定时器会也是放入到浏览器的队列中）</li></ul> <p><code>new Promise(() =&gt; {}).then()</code> ，我们来看这样一个Promise代码</p></li></ul> <p>前面的 <code>new Promise()</code> 这一部分是一个构造函数，这是一个同步任务</p> <p>后面的 <code>.then()</code> 才是一个异步微任务，这一点是非常重要的</p> <div class="language- extra-class"><pre class="language-text"><code>new Promise((resolve) =&gt; {
+	console.log(1)
+  resolve()
+}).then(()=&gt;{
+	console.log(2)
+})
+console.log(3)
+复制代码
+</code></pre></div><p>上面代码输出<code>1 3 2</code>
+async/await本质上还是基于Promise的一些封装，而Promise是属于微任务的一种</p> <p>所以在使用await关键字与Promise.then效果类似</p> <div class="language- extra-class"><pre class="language-text"><code>setTimeout(() =&gt; console.log(4))
+
+async function test() {
+  console.log(1)
+  await Promise.resolve()
+  console.log(3)
+}
+
+test()
+
+console.log(2)
+复制代码
+</code></pre></div><p>上述代码输出<code>1 2 3 4</code></p> <p>可以理解为，<code>await</code> 以前的代码，相当于与 <code>new Promise</code> 的同步代码，<code>await</code> 以后的代码相当于 <code>Promise.then</code>的异步</p> <h2 id="闭包"><a href="#闭包" class="header-anchor">#</a> 闭包</h2> <ul><li>闭包的使用场景
+1、保存变量在内存中
+2、函数柯里化
+3、深度克隆 避免自身相互调用</li></ul> <h2 id="什么是proxy？"><a href="#什么是proxy？" class="header-anchor">#</a> 什么是Proxy？</h2> <p>Proxy 用于修改某些操作的默认行为，等同于在语言层面做出修改，所以属于一种“元编程”，即对编程语言进行编程。</p> <p>Proxy 可以理解成，在目标对象之前架设一层“拦截”，外界对该对象的访问，都必须先通过这层拦截，因此提供了一种机制，可以对外界的访问进行过滤和改写。Proxy 这个词的原意是代理，用在这里表示由它来“代理”某些操作，可以译为“代理器”。</p> <blockquote><p>高能预警⚡⚡⚡</p></blockquote> <h2 id="proxy实现双向代理"><a href="#proxy实现双向代理" class="header-anchor">#</a> proxy实现双向代理</h2> <h2 id="写一个通用的事件侦听器函数"><a href="#写一个通用的事件侦听器函数" class="header-anchor">#</a> 写一个通用的事件侦听器函数</h2> <div class="language- extra-class"><pre class="language-text"><code>const EventUtils = {
+  // 视能力分别使用dom0||dom2||IE方式 来绑定事件
+  // 添加事件
+  addEvent: function(element, type, handler) {
+    if (element.addEventListener) {
+      element.addEventListener(type, handler, false);
+    } else if (element.attachEvent) {
+      element.attachEvent(&quot;on&quot; + type, handler);
+    } else {
+      element[&quot;on&quot; + type] = handler;
+    }
+  },
+
+  // 移除事件
+  removeEvent: function(element, type, handler) {
+    if (element.removeEventListener) {
+      element.removeEventListener(type, handler, false);
+    } else if (element.detachEvent) {
+      element.detachEvent(&quot;on&quot; + type, handler);
+    } else {
+      element[&quot;on&quot; + type] = null;
+    }
+  },
+
+  // 获取事件目标
+  getTarget: function(event) {
+    return event.target || event.srcElement;
+  },
+
+  // 获取 event 对象的引用，取到事件的所有信息，确保随时能使用 event
+  getEvent: function(event) {
+    return event || window.event;
+  },
+
+  // 阻止事件（主要是事件冒泡，因为 IE 不支持事件捕获）
+  stopPropagation: function(event) {
+    if (event.stopPropagation) {
+      event.stopPropagation();
+    } else {
+      event.cancelBubble = true;
+    }
+  },
+
+  // 取消事件的默认行为
+  preventDefault: function(event) {
+    if (event.preventDefault) {
+      event.preventDefault();
+    } else {
+      event.returnValue = false;
+    }
+  }
+};
+</code></pre></div><h2 id="js的深浅拷贝"><a href="#js的深浅拷贝" class="header-anchor">#</a> js的深浅拷贝</h2> <h3 id="浅拷贝"><a href="#浅拷贝" class="header-anchor">#</a> 浅拷贝</h3> <p>创建一个新对象，这个对象有着原始对象属性值的一份精确拷贝。如果属性是基本类型，拷贝的就是基本类型的值，如果属性是引用类型，拷贝的就是内存地址 ，所以如果其中一个对象改变了这个地址，就会影响到另一个对象</p> <h3 id="深拷贝"><a href="#深拷贝" class="header-anchor">#</a> 深拷贝</h3> <p>将一个对象从内存中完整的拷贝一份出来,从堆内存中开辟一个新的区域存放新对象,且修改新对象不会影响原对象。
+<strong>浅拷贝的实现方式：</strong></p> <ul><li><strong>Object.assign() 方法：</strong> 用于将所有可枚举属性的值从一个或多个源对象复制到目标对象。它将返回目标对象。</li> <li>**Array.prototype.slice()：**slice() 方法返回一个新的数组对象，这一对象是一个由 begin和end（不包括end）决定的原数组的浅拷贝。原始数组不会被改变。</li> <li><strong>拓展运算符<code>...</code>：</strong></li></ul> <div class="language- extra-class"><pre class="language-text"><code>let a = {
+    name: &quot;Jake&quot;,
+    flag: {
+        title: &quot;better day by day&quot;,
+        time: &quot;2020-05-31&quot;
+    }
+}
+let b = {...a};
+复制代码
+</code></pre></div><p><strong>深拷贝的实现方式：</strong></p> <ul><li><strong>乞丐版：</strong> JSON.parse(JSON.stringify(object))，缺点诸多（会忽略undefined、symbol、函数；不能解决循环引用；不能处理正则、new Date()）</li> <li><strong>基础版（面试够用）：</strong> 浅拷贝+递归 （只考虑了普通的 object和 array两种数据类型）</li></ul> <div class="language- extra-class"><pre class="language-text"><code>function cloneDeep(target,map = new WeakMap()) {
+  if(typeOf taret ==='object'){
+     let cloneTarget = Array.isArray(target) ? [] : {};
+    
+     if(map.get(target)) {
+        return target;
+    }
+     map.set(target, cloneTarget);
+     for(const key in target){
+        cloneTarget[key] = cloneDeep(target[key], map);
+     }
+     return cloneTarget
+  }else{
+       return target
+  }
+}
+</code></pre></div><ul><li><strong>终极版：</strong></li></ul> <h2 id="手写call、apply及bind函数"><a href="#手写call、apply及bind函数" class="header-anchor">#</a> 手写call、apply及bind函数</h2> <p><strong>call 函数的实现步骤：</strong></p> <blockquote><p><strong>注意：<strong>该方法的语法和作用与 <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/apply" target="_blank" rel="noopener noreferrer"><code>apply()</code><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a> 方法类似，只有一个区别，就是 <code>call()</code> 方法接受的是</strong>一个参数列表</strong>，而 <code>apply()</code> 方法接受的是<strong>一个包含多个参数的数组</strong>。 function.call(thisArg, arg1, arg2, ...)</p></blockquote> <ul><li>1.判断调用对象是否为函数，即使我们是定义在函数的原型上的，但是可能出现使用 call 等方式调用的情况。</li> <li>2.判断传入上下文对象是否存在，如果不存在，则设置为 window 。</li> <li>3.处理传入的参数，截取第一个参数后的所有参数。</li> <li>4.将函数作为上下文对象的一个属性。</li> <li>5.使用上下文对象来调用这个方法，并保存返回结果。</li> <li>6.删除刚才新增的属性。</li> <li>7.返回结果。</li></ul> <div class="language- extra-class"><pre class="language-text"><code>// call函数实现
+Function.prototype.myCall = function(context) {
+  // 判断调用对象
+  if (typeof this !== &quot;function&quot;) {
+    console.error(&quot;type error&quot;);
+  }
+
+  // 获取参数 第一个是this， 后面的是参数 所以要slice(1)
+  let args = [...arguments].slice(1),
+    result = null;
+
+  // 判断 context 是否传入，如果未传入则设置为 window
+  context = context || window;
+
+  // 将调用函数设为对象的方法
+  context.fn = this;
+
+  // 调用函数
+  result = context.fn(...args);
+
+  // 将属性删除
+  delete context.fn;
+
+  return result;
+};
+复制代码
+</code></pre></div><p><strong>apply 函数的实现步骤：</strong></p> <div class="language- extra-class"><pre class="language-text"><code>func.apply(thisArg必选, [argsArray]可选)
+</code></pre></div><ul><li><ol><li>判断调用对象是否为函数，即使我们是定义在函数的原型上的，但是可能出现使用 call 等方式调用的情况。</li></ol></li> <li><ol><li>判断传入上下文对象是否存在，如果不存在，则设置为 window 。</li></ol></li> <li><ol><li>将函数作为上下文对象的一个属性。</li></ol></li> <li><ol><li>判断参数值是否传入</li></ol></li> <li><ol><li>使用上下文对象来调用这个方法，并保存返回结果。</li></ol></li> <li><ol><li>删除刚才新增的属性</li></ol></li> <li><ol><li>返回结果</li></ol></li></ul> <div class="language- extra-class"><pre class="language-text"><code>// apply 函数实现
+
+Function.prototype.myApply = function(context) {
+  // 判断调用对象是否为函数
+  if (typeof this !== &quot;function&quot;) {
+    throw new TypeError(&quot;Error&quot;);
+  }
+
+  let result = null;
+
+  // 判断 context 是否存在，如果未传入则为 window
+  context = context || window;
+
+  // 将函数设为对象的方法
+  context.fn = this;
+
+  // 调用方法
+  if (arguments[1]) {
+    result = context.fn(...arguments[1]);
+  } else {
+    result = context.fn();
+  }
+
+  // 将属性删除
+  delete context.fn;
+
+  return result;
+};
+
+
+复制代码
+</code></pre></div><p><strong>bind 函数的实现步骤：</strong></p> <p><code>**bind()**</code> 方法创建一个新的函数，在 <code>bind()</code> 被调用时，这个新函数的 <code>this</code> 被指定为 <code>bind()</code> 的第一个参数，而其余参数将作为新函数的参数，供调用时使用。 <code>返回一个原函数的拷贝，并拥有指定的 **</code>this<code>** 值和初始参数。</code></p> <ul><li>1.判断调用对象是否为函数，即使我们是定义在函数的原型上的，但是可能出现使用 call 等方式调用的情况。</li> <li>2.保存当前函数的引用，获取其余传入参数值。</li> <li>3.创建一个函数返回</li> <li>4.函数内部使用 apply 来绑定函数调用，需要判断函数作为构造函数的情况，这个时候需要传入当前函数的 this 给 apply 调用，其余情况都传入指定的上下文对象。</li></ul> <div class="language- extra-class"><pre class="language-text"><code>// bind 函数实现
+Function.prototype.myBind = function(context) {
+  // 判断调用对象是否为函数
+  if (typeof this !== &quot;function&quot;) {
+    throw new TypeError(&quot;Error&quot;);
+  }
+
+  // 获取参数
+  var args = [...arguments].slice(1),
+    fn = this;
+
+  return function Fn() {
+    // 根据调用方式，传入不同绑定值
+    return fn.apply(
+      this instanceof Fn ? this : context,
+      args.concat(...arguments)
+    );
+  };
+};
+复制代码
+</code></pre></div><p>参考文章：
+<a href="https://github.com/mqyqingfeng/Blog/issues/11" target="_blank" rel="noopener noreferrer">《JavaScript 深入之 call 和 apply 的模拟实现》<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></p> <h2 id="函数柯里化的实现"><a href="#函数柯里化的实现" class="header-anchor">#</a> 函数柯里化的实现</h2> <div class="language- extra-class"><pre class="language-text"><code>// 函数柯里化指的是一种将使用多个参数的一个函数转换成一系列使用一个参数的函数的技术。
+
+function curry(fn, args) {
+  // 获取函数需要的参数长度
+  let length = fn.length;
+
+  args = args || [];
+
+  return function() {
+    let subArgs = args.slice(0);
+
+    // 拼接得到现有的所有参数
+    for (let i = 0; i &lt; arguments.length; i++) {
+      subArgs.push(arguments[i]);
+    }
+
+    // 判断参数的长度是否已经满足函数所需参数的长度
+    if (subArgs.length &gt;= length) {
+      // 如果满足，执行函数
+      return fn.apply(this, subArgs);
+    } else {
+      // 如果不满足，递归返回科里化的函数，等待参数的传入
+      return curry.call(this, fn, subArgs);
+    }
+  };
+}
+
+// es6 实现
+function curry(fn, ...args) {
+  return fn.length &lt;= args.length ? fn(...args) : curry.bind(null, fn, ...args);
+}
+</code></pre></div><p>参考文章： <a href="https://github.com/mqyqingfeng/Blog/issues/42" target="_blank" rel="noopener noreferrer">《JavaScript 专题之函数柯里化》<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></p> <h2 id="new操作符的实现"><a href="#new操作符的实现" class="header-anchor">#</a> new操作符的实现</h2> <p><code>new</code> 运算符创建一个用户定义的对象类型的实例或具有构造函数的内置对象的实例。<code>new</code> 关键字会进行如下的操作：</p> <ol><li>创建一个空的简单JavaScript对象（即{}）；</li> <li>链接该对象（即设置该对象的构造函数）到另一个对象 ；</li> <li>将步骤1新创建的对象作为this的上下文 ；</li> <li>如果该函数没有返回对象，则返回this。</li></ol> <p>接下来我们看实现：</p> <p>接下来我们将以上步骤封装成一个对象实例化方法，即模拟new的操作：</p> <div class="language- extra-class"><pre class="language-text"><code>function objectFactory(){
+    var obj = {};
+    //取得该方法的第一个参数(并删除第一个参数)，该参数是构造函数
+    var Constructor = [].shift.apply(arguments);
+    //将新对象的内部属性__proto__指向构造函数的原型，这样新对象就可以访问原型中的属性和方法
+    obj.__proto__ = Constructor.prototype;
+    //取得构造函数的返回值
+    var ret = Constructor.apply(obj, arguments);
+    //如果返回值是一个对象就返回该对象，否则返回构造函数的一个实例对象
+    return typeof ret === &quot;object&quot; ? ret : obj;
+}
+</code></pre></div><p>new 的优先级 看如下代码</p> <div class="language- extra-class"><pre class="language-text"><code>    function Foo() {
+        return this;
+    }
+    Foo.getName = function () {
+        console.log('1');
+    };
+    Foo.prototype.getName = function () {
+        console.log('2');
+    };
+
+    new Foo.getName();   // -&gt; 1
+    new Foo().getName(); // -&gt; 2
+</code></pre></div><p>new Foo() 的优先级大于 new Foo ，所以对于上述代码来说可以这样划分执行顺序</p> <p>new (Foo.getName()); (new Foo()).getName();</p> <p>对于第一个函数来说，先执行了 Foo.getName() ，所以结果为 1；对于后者来说，先执行 new Foo() 产生了一个实例，然后通过原型链找到了 Foo 上的 getName 函数，所以结果为 2</p> <h2 id="iterator是什么，有什么作用？"><a href="#iterator是什么，有什么作用？" class="header-anchor">#</a> <code>Iterator</code>是什么，有什么作用？</h2> <p>JavaScript 原有的表示“集合”的数据结构，主要是数组（<code>Array</code>）和对象（<code>Object</code>），ES6 又添加了<code>Map</code>和<code>Set</code>。这样就有了四种数据集合，用户还可以组合使用它们，定义自己的数据结构，比如数组的成员是<code>Map</code>，<code>Map</code>的成员是对象。这样就需要一种统一的接口机制，来处理所有不同的数据结构。</p> <p>JavaScript 原有的表示“集合”的数据结构，主要是数组（<code>Array</code>）和对象（<code>Object</code>），ES6 又添加了<code>Map</code>和<code>Set</code>。这样就有了四种数据集合，用户还可以组合使用它们，定义自己的数据结构，比如数组的成员是<code>Map</code>，<code>Map</code>的成员是对象。这样就需要一种统一的接口机制，来处理所有不同的数据结构。</p> <p>遍历器（Iterator）就是这样一种机制。它是一种接口，为各种不同的数据结构提供统一的访问机制。任何数据结构只要部署 Iterator 接口，就可以完成遍历操作（即依次处理该数据结构的所有成员）。</p> <p>Iterator 的作用有三个：一是为各种数据结构，提供一个统一的、简便的访问接口；二是使得数据结构的成员能够按某种次序排列；三是 ES6 创造了一种新的遍历命令<code>for...of</code>循环，Iterator 接口主要供<code>for...of</code>消费。</p> <blockquote><p>Iterator 接口主要供<code>for...of</code>消费</p></blockquote> <p>Iterator 的遍历过程是这样的。</p> <p>（1）创建一个指针对象，指向当前数据结构的起始位置。也就是说，遍历器对象本质上，就是一个指针对象。</p> <p>（2）第一次调用指针对象的<code>next</code>方法，可以将指针指向数据结构的第一个成员。</p> <p>（3）第二次调用指针对象的<code>next</code>方法，指针就指向数据结构的第二个成员。</p> <p>（4）不断调用指针对象的<code>next</code>方法，直到它指向数据结构的结束位置。</p> <p>每一次调用<code>next</code>方法，都会返回数据结构的当前成员的信息。具体来说，就是返回一个包含<code>value</code>和<code>done</code>两个属性的对象。其中，<code>value</code>属性是当前成员的值，<code>done</code>属性是一个布尔值，表示遍历是否结束。</p> <p>Iterator 接口的目的，就是为所有数据结构，(array,object,map,set)提供了一种统一的访问机制，即<code>for...of</code>循环（详见下文）。当使用<code>for...of</code>循环遍历某种数据结构时，该循环会自动去寻找 Iterator 接口。</p> <blockquote><p>ES6 规定，默认的 Iterator 接口部署在数据结构的<code>Symbol.iterator</code>属性，或者说，一个数据结构只要具有<code>Symbol.iterator</code>属性，就可以认为是“可遍历的”（iterable）</p></blockquote> <p>原生具备 Iterator 接口的数据结构如下。</p> <ul><li>Array</li> <li>Map</li> <li>Set</li> <li>String</li> <li>TypedArray</li> <li>函数的 arguments 对象</li> <li>NodeList 对象</li></ul> <div class="language- extra-class"><pre class="language-text"><code>let arr = ['a', 'b', 'c'];
+let iter = arr[Symbol.iterator]();
+iter.next() // { value: 'a', done: false }
+iter.next() // { value: 'b', done: false }
+iter.next() // { value: 'c', done: false }
+iter.next() // { value: undefined, done: true }
+</code></pre></div><blockquote><p>对于原生部署 Iterator 接口的数据结构，不用自己写遍历器生成函数，<code>for...of</code>循环会自动遍历它们。除此之外，其他数据结构（主要是对象）的 Iterator 接口，都需要自己在<code>Symbol.iterator</code>属性上面部署，这样才会被<code>for...of</code>循环遍历。</p></blockquote> <p>对象（Object）之所以没有默认部署 Iterator  接口，是因为对象的哪个属性先遍历，哪个属性后遍历是不确定的，需要开发者手动指定。本质上，遍历器是一种线性处理，对于任何非线性的数据结构，部署遍历器接口，就等于部署一种线性转换。不过，严格地说，对象部署遍历器接口并不是很必要，因为这时对象实际上被当作 Map 结构使用，ES5 没有 Map 结构，而 ES6 原生提供了。</p> <h2 id="generator函数是什么，有什么作用？"><a href="#generator函数是什么，有什么作用？" class="header-anchor">#</a> <code>Generator</code>函数是什么，有什么作用？</h2> <p>Generator函数可以说是Iterator接口的具体实现方式。Generator 最大的特点就是可以控制函数的执行。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token operator">*</span><span class="token function">foo</span><span class="token punctuation">(</span><span class="token parameter">x</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> y <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> <span class="token punctuation">(</span><span class="token keyword">yield</span> <span class="token punctuation">(</span>x <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token keyword">let</span> z <span class="token operator">=</span> <span class="token keyword">yield</span> <span class="token punctuation">(</span>y <span class="token operator">/</span> <span class="token number">3</span><span class="token punctuation">)</span>
+  <span class="token keyword">return</span> <span class="token punctuation">(</span>x <span class="token operator">+</span> y <span class="token operator">+</span> z<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">let</span> it <span class="token operator">=</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>it<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>   <span class="token comment">// =&gt; {value: 6, done: false}</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>it<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token number">12</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// =&gt; {value: 8, done: false}</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>it<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token number">13</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// =&gt; {value: 42, done: true}</span>
+
+复制代码
+</code></pre></div><p>上面这个示例就是一个Generator函数，我们来分析其执行过程：</p> <ul><li><code>首先 Generator 函数调用时它会返回一个迭代器</code></li> <li><code>当执行第一次 next 时，传参会被忽略，并且函数暂停在 yield (x + 1) 处，所以返回 5 + 1 = 6</code></li> <li><code>当执行第二次 next 时，传入的参数等于上一个 yield 的返回值，如果你不传参，yield 永远返回 undefined。此时 let y = 2 * 12，所以第二个 yield 等于 2 * 12 / 3 = 8</code></li> <li><code>当执行第三次 next 时，传入的参数会传递给 z，所以 z = 13, x = 5, y = 24，相加等于 42</code></li></ul> <p><code>Generator</code> 函数一般见到的不多，其实也于他有点绕有关系，并且一般会配合 co 库去使用。当然，我们可以通过 <code>Generator</code> 函数解决回调地狱的问题。</p> <h2 id="instanceof的原理是什么"><a href="#instanceof的原理是什么" class="header-anchor">#</a> instanceof的原理是什么</h2> <p>A instanceof ==&gt; B B.prototype是否在A的原型链上</p> <div class="language- extra-class"><pre><code>function myInstanceof(left, right) {
+  let prototype = right.prototype
+  left = left.__proto__
+  while (true) {
+    if (left === null || left === undefined)
+      return false
+    if (prototype === left)
+      return true
+    left = left.__proto__
+  }
+}
+</code></pre></div><h2 id="js-的节流与防抖"><a href="#js-的节流与防抖" class="header-anchor">#</a> js 的节流与防抖</h2> <p><strong>函数防抖</strong> 是指在事件被触发 n 秒后再执行回调，如果在这 n 秒内事件又被触发，则重新计时。这可以使用在一些点击请求的事件上，避免因为用户的多次点击向后端发送多次请求。</p> <p><strong>函数节流</strong> 是指规定一个单位时间，在这个单位时间内，只能有一次触发事件的回调函数执行，如果在同一个单位时间内某事件被触发多次，只有一次能生效。节流可以使用在 scroll 函数的事件监听上，通过事件节流来降低事件调用的频率。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 函数防抖的实现</span>
+<span class="token keyword">function</span> <span class="token function">debounce</span><span class="token punctuation">(</span><span class="token parameter">fn<span class="token punctuation">,</span> wait</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> timer <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> context <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">,</span>
+      args <span class="token operator">=</span> arguments<span class="token punctuation">;</span>
+
+    <span class="token comment">// 如果此时存在定时器的话，则取消之前的定时器重新记时</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>timer<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">clearTimeout</span><span class="token punctuation">(</span>timer<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      timer <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// 设置定时器，使事件间隔指定事件后执行</span>
+    timer <span class="token operator">=</span> <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      <span class="token function">fn</span><span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> wait<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 函数节流的实现;</span>
+<span class="token keyword">function</span> <span class="token function">throttle</span><span class="token punctuation">(</span><span class="token parameter">fn<span class="token punctuation">,</span> delay</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> preTime <span class="token operator">=</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> context <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">,</span>
+      args <span class="token operator">=</span> arguments<span class="token punctuation">,</span>
+      nowTime <span class="token operator">=</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 如果两次时间间隔超过了指定时间，则执行函数。</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>nowTime <span class="token operator">-</span> preTime <span class="token operator">&gt;=</span> delay<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      preTime <span class="token operator">=</span> Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span> <span class="token function">fn</span><span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+复制代码
+</code></pre></div><p>详细资料可以参考：</p> <p><a href="https://juejin.im/post/6844903535125987335" target="_blank" rel="noopener noreferrer">《轻松理解 JS 函数节流和函数防抖》<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></p> <p><a href="https://juejin.im/post/6844903575663935496" target="_blank" rel="noopener noreferrer">《JavaScript 事件节流和事件防抖》<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></p> <p><a href="https://juejin.im/entry/6844903618827517965" target="_blank" rel="noopener noreferrer">《JS 的防抖与节流》<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg></a></p></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/js/rumen.html" class="prev">
+        入门
+      </a></span> <span class="next"><a href="/js/axios.html">
+        axios
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"></div></div>
+    <script src="/assets/js/app.a611df23.js" defer></script><script src="/assets/js/2.1379642d.js" defer></script><script src="/assets/js/20.6242501c.js" defer></script>
+  </body>
+</html>
